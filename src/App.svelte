@@ -65,10 +65,14 @@
         for (const item of document.querySelectorAll("video"))
             item[val ? "pause" : "play"](); // Pause the previous videos if the screensaver is enabled
         document.body.style.overflow = val ? "hidden" : "auto";
-        !val && FullscreenManager.remove();
-        val
-            ? navigator.wakeLock.request().then((res) => (wakeLock = res))
-            : wakeLock?.release();
+        try {
+            !val && FullscreenManager.remove();
+            val
+                ? navigator.wakeLock.request().then((res) => (wakeLock = res))
+                : wakeLock?.release();
+        } catch (ex) {
+            console.warn(ex);
+        }
     });
 </script>
 
