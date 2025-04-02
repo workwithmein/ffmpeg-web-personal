@@ -114,7 +114,7 @@ export default class BackgroundManager {
      */
     set = async (content: Blob[], screenSaver?: boolean) => {
         const db = await IndexedDatabase.db();
-        const query = `${screenSaver ? "Screensaver" : "Background"}${Settings.backgroundContent.type === "image" ? "Image" : Settings.backgroundContent.type === "video" ? "Video" : "YT"}`;
+        const query = `${screenSaver ? "Screensaver" : "Background"}${Settings[screenSaver ? "screenSaver" : "backgroundContent"].type === "image" ? "Image" : Settings[screenSaver ? "screenSaver" : "backgroundContent"].type === "video" ? "Video" : "YT"}`;
         const getResource = await IndexedDatabase.get({ db, query });
         const blobs: Blob[] = [];
         blobs.push(...(Array.isArray(getResource?.blob) ? [...getResource.blob, ...content] : getResource?.blob !== undefined ? [getResource.blob, ...content] : content));

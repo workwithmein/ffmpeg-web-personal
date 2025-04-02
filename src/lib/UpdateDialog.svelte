@@ -11,6 +11,16 @@
         <AdaptiveAsset asset="icon" width={128}></AdaptiveAsset>
     </div>
     <Card type={1} forceColor={true}>
+        <h3 style="text-align: center;">Version 3.1.1</h3>
+                <Card forceColor={true}>
+        <ul>
+            <li>It's now possible to choose a custom file extension in the "Media encoding" section</li>
+            <li>Fixed a bug due to which images/videos that should have been displayed in the screensaver weren't saved</li>
+            <li>Fixed the wrong address of the website icon in the manifest.json file (see <a href="https://github.com/dinoosauro/ffmpeg-web/pull/13" target="_blank">#13 by @birabittoh</a>)</li>
+        </ul>
+        </Card>
+    </Card><br>
+    <Card type={1} forceColor={true}>
         <h3 style="text-align: center;">Version 3.1.0</h3>
         <Card forceColor={true}>
             <ul>

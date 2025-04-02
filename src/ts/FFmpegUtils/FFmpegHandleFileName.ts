@@ -4,8 +4,19 @@ import Settings from "../TabOptions/Settings";
  * @param file the File object that'll be used for getting the path
  * @returns the path to use for FFmpeg
  */
-export default function FFmpegFileNameHandler(file: File) {
+export default function FFmpegFileNameHandler(file: File, customExtension?: string) {
     const suggestedVersion = Settings.version as "0.11.x" | "native";
-    if (!(file instanceof File)) return file;
-    return (suggestedVersion === "native" ? file.path : undefined) || file.webkitRelativePath || file.name;
+    if (!(file instanceof File)) return changeCustomExtension(file, customExtension);
+    return changeCustomExtension((suggestedVersion === "native" ? file.path : undefined) || file.webkitRelativePath || file.name, customExtension);
+}
+
+/**
+ * Change the file extension if a string is provided.
+ * @param str the file path
+ * @param extension the extension that should be replaced. If nullish, str will be returned.
+ * @returns The file name to use.
+ */
+function changeCustomExtension(str: string, extension?: string) {
+    if (!extension) return str;
+    return `${str.substring(0, str.lastIndexOf("."))}.${extension}`;
 }

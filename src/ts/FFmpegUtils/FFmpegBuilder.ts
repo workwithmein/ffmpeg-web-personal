@@ -46,6 +46,10 @@ export default class FfmpegHandler {
      */
     flags: CustomOptions;
     /**
+     * If the action being ran is a video/audio conversion using the Main Encoding UI (the first one). This is used so that the output container can be changed if needed.
+     */
+    #isMainVideoEncoding = false;
+    /**
      * The files that'll be added to the FFmpeg script
      */
     #files: File[] = [];
@@ -99,7 +103,7 @@ export default class FfmpegHandler {
      * @param skipMultipleFiles if true, the "trimOptions" passed will be ignored
      * @returns an `OperationProps` object, with the `File` string path (if native) or Uint8Array (if WebAssembly), its `extension` and the `suggestedFileName`
      */
-    start = async (command: string[], suggestedFileName = this.flags.addedFromInput && !this.flags.getNameWithFfmpegHandler ? command[command.length - 1] : FFmpegFileNameHandler(this.#files[0]), skipMultipleFiles?: boolean) => {
+    start = async (command: string[], suggestedFileName = this.flags.addedFromInput && !this.flags.getNameWithFfmpegHandler ? command[command.length - 1] : FFmpegFileNameHandler(this.#files[0], this.#isMainVideoEncoding && this.#conversion.outputContainerChanged ? this.#conversion.outputContainerRequested : undefined), skipMultipleFiles?: boolean) => {
         if (this.#files.length === 0) throw new Error("Please set up files using the addFiles function");
         /**
          * An UUID will be used for this conversion to make the output file string unique.
@@ -115,6 +119,7 @@ export default class FfmpegHandler {
         const elaborationType = this.#isImg ? "image" : this.#conversion.isVideoSelected ? "video" : "audio"; // We need to fetch the file extension. By knowing the output file type, we can ask EncoderInfo to get the extension. If nothing is found, we'll use the extension of the first file.
         let outputFileExtension = this.flags.suggestedFileExtension ?? (this.flags.addedFromInput ? command[command.length - 1].substring(command[command.length - 1].lastIndexOf(".") + 1) : EncoderInfo[elaborationType].get(this.#conversion[`${elaborationType}TypeSelected`])?.extension ?? this.#files[0].name.substring(this.#files[0].name.lastIndexOf(".") + 1));
         if (outputFileExtension === "!") outputFileExtension = this.#files[0].name.substring(this.#files[0].name.lastIndexOf(".") + 1); // The extension might be "!" if the "Copy video" or "Copy audio" options are selected
+        if (this.#isMainVideoEncoding && this.#conversion.outputContainerChanged) outputFileExtension = this.#conversion.outputContainerRequested; // The user has set a different extension from the "Main Encoding" UI, so that should be used.
         /**
          * If further timestamps needs to be elaborated, and therefore the build script needs to be run again.
          */
@@ -263,6 +268,7 @@ export default class FfmpegHandler {
      */
     build = (isImage?: boolean) => {
         this.#isImg = isImage;
+        this.#isMainVideoEncoding = !isImage; // Currently, the "build" command is being ran only from the Image and the Video/Audio Encoding section
         /**
          * Get the parts for hardware acceleration to add in the script.
          */

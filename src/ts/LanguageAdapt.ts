@@ -240,7 +240,9 @@ let translations = new Map<string, TranslationRequirements>([
     ["Video codec", { it: "Codec video" }],
     ["Audio codec", { it: "Codec audio" }],
     ["FPS (-1 for variable)", { it: "FPS (-1 per variabile)" }],
-    ["Restore presentation timestamps to START. This *might* help fixing wrong timestamps.", { it: "Reimposta presentation timestamps all'inizio. Questo *potrebbe* aiutare a sistemare i timestamp sbagliati." }]
+    ["Restore presentation timestamps to START. This *might* help fixing wrong timestamps.", { it: "Reimposta presentation timestamps all'inizio. Questo *potrebbe* aiutare a sistemare i timestamp sbagliati." }],
+    ["Custom output container", { it: "Container di destinazione personalizzato" }],
+    ["File extension:", { it: "Estensione del file:" }]
 ])
 /**
  * Translate a string

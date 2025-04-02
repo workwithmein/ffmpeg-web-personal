@@ -7,6 +7,8 @@ let ConversionOptions = {
     videoTypeSelected: "libx264",
     audioTypeSelected: "aac",
     imageTypeSelected: "png",
+    outputContainerChanged: false,
+    outputContainerRequested: "mp4",
     videoOptions: {
         useSlider: true,
         value: "22",

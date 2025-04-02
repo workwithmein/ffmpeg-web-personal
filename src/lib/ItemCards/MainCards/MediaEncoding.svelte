@@ -10,6 +10,7 @@
     import { createEventDispatcher } from "svelte";
     import { GetImage } from "../../../ts/ImageHandler";
     import AdaptiveAsset from "../../UIElements/AdaptiveAsset.svelte";
+    import Card from "../../UIElements/Card/Card.svelte";
     const dispatch = createEventDispatcher();
     /**
      * If only the selection should be displayed, without the title
@@ -68,7 +69,7 @@
         }}
         checked={ConversionOptions.isAudioSelected}
         text={getLang("Enable audio source")}
-    ></Switch>
+    ></Switch><br>
 {:else}
     <h4 style="margin-top: 0px">{getLang("Audio codec")}:</h4>
 {/if}
@@ -96,4 +97,25 @@
             ></Chip>
         </ChipContainer>
     </span>
+{/if}
+{#if !isMinimal}
+<br>
+        <Switch
+        on:change={({ detail }) => {
+            ConversionOptions.outputContainerChanged = detail;
+        }}
+        checked={ConversionOptions.outputContainerChanged}
+        text={getLang("Custom output container")}
+    ></Switch>
+    {#if ConversionOptions.outputContainerChanged}
+    <br>
+        <span in:slide={{ duration: 600 }} out:slide={{ duration: 600 }}>
+            <Card type={1}>
+                <div class="flex hcenter" style="gap: 10px">
+                    {getLang("File extension:")}
+                    <input type="text" bind:value={ConversionOptions.outputContainerRequested}>
+                </div>
+            </Card>
+    </span>
+    {/if}
 {/if}
