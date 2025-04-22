@@ -242,7 +242,8 @@ let translations = new Map<string, TranslationRequirements>([
     ["FPS (-1 for variable)", { it: "FPS (-1 per variabile)" }],
     ["Restore presentation timestamps to START. This *might* help fixing wrong timestamps.", { it: "Reimposta presentation timestamps all'inizio. Questo *potrebbe* aiutare a sistemare i timestamp sbagliati." }],
     ["Custom output container", { it: "Container di destinazione personalizzato" }],
-    ["File extension:", { it: "Estensione del file:" }]
+    ["File extension:", { it: "Estensione del file:" }],
+    ["Use WORKERFS for file writing operations. This helps reducing RAM usage.", { it: "Utilizza WORKERFS per le operazioni di scrittura del file. Questo aiuta a ridurre l'utilizzo della RAM." }]
 ])
 /**
  * Translate a string

@@ -5,6 +5,7 @@ let Settings = {
     version: typeof window.nativeOperations === "undefined" ? "0.11.x" : "native",
     storageMethod: "link",
     useMultiThreaded: true,
+    enableWorkerFS: true,
     backgroundContent: {
         type: "color",
         refreshImage: 5000,

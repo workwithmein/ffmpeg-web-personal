@@ -59,6 +59,14 @@ export default class ffmpeg {
     exit!: () => void;
     native = false;
     operationId = 0;
+    /**
+     * If WORKERFS is being used, and so a virtual drive should be mounted for file reading
+     */
+    #isMounted = false;
+    /**
+     * Key: path, value: array of files to add
+     */
+    #filesToMount: any = {};
     constructor(type: FFmpegVersions, urls?: FfmpegUrls) {
         this.promise = new Promise<void>((resolve) => { this.#resolvePromise = resolve })
         currentConversionValue.update((val) => { // New conversion ID
@@ -114,18 +122,39 @@ export default class ffmpeg {
                         });
                     }
                     this.writeFile = async (file) => {
+                        this.#isMounted = Settings.enableWorkerFS;
                         // Create, one path at a time, the directories necessary for the file
                         const namePath = FFmpegFileNameHandler(file).split("/");
                         const name = namePath.pop();
+                        this.#isMounted && namePath.unshift("mount");
                         if (!name) throw new Error("Undefined name array!");
-                        for (let i = 0; i < namePath.length; i++) await obj.createDir(namePath.slice(0, i + 1).join("/"));
-                        await obj.writeFile(FFmpegFileNameHandler(file), new Uint8Array(await file.arrayBuffer()));
+                        for (let i = 0; i < namePath.length; i++) {
+                            try {
+                                await obj.createDir(namePath.slice(0, i + 1).join("/"));
+                            } catch (ex) {
+                                console.warn(ex);
+                            }
+                        }
+                        if (this.#isMounted) {
+                            const path = namePath.join("/");
+                            if (!this.#filesToMount[path]) this.#filesToMount[path] = [];
+                            this.#filesToMount[path].push(file); // Add to that path the file. It'll be mounted when the command is executed.
+                        } else await obj.writeFile(FFmpegFileNameHandler(file), new Uint8Array(await file.arrayBuffer()));
                     }
                     this.readFile = async (name) => {
                         return await obj.readFile(name) as Uint8Array;
                     }
                     this.exec = (command) => {
                         return new Promise<void>(async (resolve, reject) => {
+                            if (this.#isMounted) {
+                                for (let i = 0; i < command.length; i++) {
+                                    if (command[i].toLowerCase() === "-i") command[i + 1] = `mount/${command[i + 1]}`;
+                                }
+                                for (const item in this.#filesToMount) {
+                                    console.log(item, this.#filesToMount[item]);
+                                    await obj.mount("WORKERFS", { files: this.#filesToMount[item] }, item);
+                                }
+                            }
                             (await obj.exec(command)) === 0 ? resolve() : reject();
                         })
                     }
@@ -135,7 +164,12 @@ export default class ffmpeg {
                         document.getElementById("addContent")?.scrollTo({ top: document.getElementById("addContent")?.scrollHeight, behavior: "smooth" })
                     });
                     this.removeFile = async (file) => {
-                        await obj.deleteFile(typeof file === "string" ? file : FFmpegFileNameHandler(file));
+                        const path = typeof file === "string" ? file : FFmpegFileNameHandler(file);
+                        try {
+                            this.#isMounted ? await obj.unmount(`mount/${path.substring(0, Math.max(0, path.lastIndexOf("/")))}`) : await obj.deleteFile(path);
+                        } catch (ex) {
+                            console.warn(ex);
+                        }
                     }
                     this.exit = () => obj.terminate();
                     obj.on("progress", ({ progress }) => conversionProgress[this.operationId] = progress);

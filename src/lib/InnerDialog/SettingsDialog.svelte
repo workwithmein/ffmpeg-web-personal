@@ -147,6 +147,13 @@
                 )}
                 on:change={({ detail }) => (Settings.useMultiThreaded = detail)}
                 checked={Settings.useMultiThreaded}
+            ></Switch><br>
+            <Switch
+                text={getLang(
+                    "Use WORKERFS for file writing operations. This should reduce memory usage, but might be unstable.",
+                )}
+                on:change={({ detail }) => (Settings.enableWorkerFS = detail)}
+                checked={Settings.enableWorkerFS}
             ></Switch>
         </span>
     {/if}<br />
