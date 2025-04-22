@@ -10,6 +10,14 @@
     <div class="flex hcenter wcenter">
         <AdaptiveAsset asset="icon" width={128}></AdaptiveAsset>
     </div>
+        <Card type={1} forceColor={true}>
+        <h3 style="text-align: center;">Version 3.1.2</h3>
+                <Card forceColor={true}>
+        <ul>
+            <li>WORKERFS is now supported on FFmpeg.Wasm 0.12.x for file reading. This greatly helps reducing RAM usage</li>
+        </ul>
+        </Card>
+    </Card><br>
     <Card type={1} forceColor={true}>
         <h3 style="text-align: center;">Version 3.1.1</h3>
                 <Card forceColor={true}>

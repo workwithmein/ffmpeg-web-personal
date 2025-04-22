@@ -150,7 +150,7 @@
             ></Switch><br>
             <Switch
                 text={getLang(
-                    "Use WORKERFS for file writing operations. This should reduce memory usage, but might be unstable.",
+                    "Use WORKERFS for file writing operations. This helps reducing RAM usage.",
                 )}
                 on:change={({ detail }) => (Settings.enableWorkerFS = detail)}
                 checked={Settings.enableWorkerFS}
