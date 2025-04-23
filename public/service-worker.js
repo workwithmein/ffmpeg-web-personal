@@ -11,6 +11,7 @@ const filestoCache = [
     './assets/index2.js',
     './assets/index3.js',
     './assets/index4.js',
+    './assets/index5.js',
     './assets/jszip.min.js',
     './assets/worker-lPYB70QI.js',
     'https://unpkg.com/@ffmpeg/core@0.11.0/dist/ffmpeg-core.wasm',

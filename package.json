@@ -24,6 +24,7 @@
     "vite-plugin-cross-origin-isolation": "^0.1.6"
   },
   "dependencies": {
+    "@zip.js/zip.js": "^2.7.60",
     "context-filter-polyfill": "^0.3.21",
     "electron": "^31.1.0",
     "ffmpeg11": "npm:@ffmpeg/ffmpeg@^0.11.6",

@@ -243,7 +243,9 @@ let translations = new Map<string, TranslationRequirements>([
     ["Restore presentation timestamps to START. This *might* help fixing wrong timestamps.", { it: "Reimposta presentation timestamps all'inizio. Questo *potrebbe* aiutare a sistemare i timestamp sbagliati." }],
     ["Custom output container", { it: "Container di destinazione personalizzato" }],
     ["File extension:", { it: "Estensione del file:" }],
-    ["Use WORKERFS for file writing operations. This helps reducing RAM usage.", { it: "Utilizza WORKERFS per le operazioni di scrittura del file. Questo aiuta a ridurre l'utilizzo della RAM." }]
+    ["Use WORKERFS for file writing operations. This helps reducing RAM usage.", { it: "Utilizza WORKERFS per le operazioni di scrittura del file. Questo aiuta a ridurre l'utilizzo della RAM." }],
+    ["[Using JSZIP - might give errors on many files or large ones]", { it: "[Utilizzando JSZIP - potrebbe dare degli errori se si scelgono tanti file o pesanti]" }],
+    ["[Using Zip.JS - recommended]", { it: "[Utilizzando Zip.JS - consigliato]" }]
 ])
 /**
  * Translate a string

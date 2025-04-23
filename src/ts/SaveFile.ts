@@ -1,9 +1,10 @@
 import type { IpcRenderer } from "electron/renderer";
 import type JSZip from "jszip";
-import handleFileStringForOS from "./HandleFileString";
 import Settings from "./TabOptions/Settings";
 import { fileUrls } from "./Writables";
-import { get } from "svelte/store";
+import type { Uint8ArrayReader } from "@zip.js/zip.js";
+import type { BlobReader } from "@zip.js/zip.js";
+import type { ZipWriter } from "@zip.js/zip.js";
 
 interface DirectoryPicker {
     id?: string,
@@ -33,13 +34,18 @@ declare global {
  * Save, or move (if using native version), a file
  */
 export default class FileSaver {
-    #suggestedOutput: "handle" | "zip" | "link" = "link";
+    #suggestedOutput: "handle" | "zip" | "link" | "zipjs" = "link";
     #directoryHandle: FileSystemDirectoryHandle | undefined;
     #jsZip: JSZip | undefined;
+    #zipJs: {
+        Uint8ArrayReader: typeof Uint8ArrayReader,
+        BlobReader: typeof BlobReader
+        ZipObject: ZipWriter<Blob>
+    } | undefined;
     promise: Promise<void> | undefined;
     /**
      * Specify how the file should be saved. Note that you also need to await `this.promise` before starting using it.
-     * @param suggested the suggested download method (`handle`, `zip`, `link`)
+     * @param suggested the suggested download method (`handle`, `zip`, `link`, `zipjs`)
      * @param handle the FileSystemDirectoryHandle for FS operation
      */
     constructor(suggested?: "handle" | "zip" | string, handle?: FileSystemDirectoryHandle) {
@@ -54,6 +60,16 @@ export default class FileSaver {
                     this.#suggestedOutput = "zip";
                     const jszip = await import("jszip");
                     this.#jsZip = new jszip.default();
+                    break;
+                }
+                case "zipjs": {
+                    this.#suggestedOutput = "zipjs";
+                    const zipjs = await import("@zip.js/zip.js");
+                    this.#zipJs = {
+                        Uint8ArrayReader: zipjs.Uint8ArrayReader,
+                        BlobReader: zipjs.BlobReader,
+                        ZipObject: new zipjs.ZipWriter(new zipjs.BlobWriter())
+                    }
                     break;
                 }
                 default:
@@ -78,10 +94,10 @@ export default class FileSaver {
      * @param name the file name
      * @param forceLink if a link must be downloaded, even if the default settings is `handle` or `zip`
      */
-    write = async (file: Uint8Array, name: string, forceLink?: boolean) => {
+    write = async (file: Uint8Array | Blob, name: string, forceLink?: boolean) => {
         function downloadLink() {
             const a = document.createElement("a");
-            a.href = URL.createObjectURL(new Blob([file]));
+            a.href = URL.createObjectURL(file instanceof Blob ? file : new Blob([file]));
             Settings.fileSaver.keepInMemory && fileUrls.update((val) => {
                 val.push({ name, path: a.href });
                 return [...val];
@@ -99,6 +115,11 @@ export default class FileSaver {
             case "zip": {
                 if (!this.#jsZip) throw new Error("Zip file must be initialized. Please await this.promise");
                 this.#jsZip.file(this.sanitize(name, true), file, { createFolders: true });
+                break;
+            }
+            case "zipjs": {
+                if (!this.#zipJs) throw new Error("Zip file must be initialized. Please await this.promise");
+                await this.#zipJs.ZipObject.add(this.sanitize(name, true), file instanceof Blob ? new this.#zipJs.BlobReader(file) : new this.#zipJs.Uint8ArrayReader(file));
                 break;
             }
             case "handle": {
@@ -133,7 +154,10 @@ export default class FileSaver {
      */
     release = async () => {
         if (this.#suggestedOutput === "zip" && this.#jsZip) {
-            const zip = await this.#jsZip.generateAsync({ type: "uint8array" });
+            const zip = await this.#jsZip.generateAsync({ type: "blob" });
+            await this.write(zip, `FFmpegWeb-Zip-${Date.now()}.zip`, true);
+        } else if (this.#suggestedOutput === "zipjs" && this.#zipJs) {
+            const zip = await this.#zipJs.ZipObject.close();
             await this.write(zip, `FFmpegWeb-Zip-${Date.now()}.zip`, true);
         }
     }

@@ -10,24 +10,58 @@
     <div class="flex hcenter wcenter">
         <AdaptiveAsset asset="icon" width={128}></AdaptiveAsset>
     </div>
-        <Card type={1} forceColor={true}>
-        <h3 style="text-align: center;">Version 3.1.2</h3>
-                <Card forceColor={true}>
-        <ul>
-            <li>WORKERFS is now supported on FFmpeg.Wasm 0.12.x for file reading. This greatly helps reducing RAM usage</li>
-        </ul>
+    <Card type={1} forceColor={true}>
+        <h3 style="text-align: center;">Version 3.1.3</h3>
+        <Card forceColor={true}>
+            <ul>
+                <li>
+                    You can now use Zip.JS instead of JSZIP for zip encoding.
+                    This should solve some issues that might arise from
+                    converting many files (or heavy ones) and adding them to a
+                    zip file using the JSZIP library.
+                    <ul>
+                        <li>
+                            You still can use the JSZIP library, that will
+                            probably work fine in 99% of cases.
+                        </li>
+                    </ul>
+                </li>
+            </ul>
         </Card>
-    </Card><br>
+    </Card><br />
+    <Card type={1} forceColor={true}>
+        <h3 style="text-align: center;">Version 3.1.2</h3>
+        <Card forceColor={true}>
+            <ul>
+                <li>
+                    WORKERFS is now supported on FFmpeg.Wasm 0.12.x for file
+                    reading. This greatly helps reducing RAM usage
+                </li>
+            </ul>
+        </Card>
+    </Card><br />
     <Card type={1} forceColor={true}>
         <h3 style="text-align: center;">Version 3.1.1</h3>
-                <Card forceColor={true}>
-        <ul>
-            <li>It's now possible to choose a custom file extension in the "Media encoding" section</li>
-            <li>Fixed a bug due to which images/videos that should have been displayed in the screensaver weren't saved</li>
-            <li>Fixed the wrong address of the website icon in the manifest.json file (see <a href="https://github.com/dinoosauro/ffmpeg-web/pull/13" target="_blank">#13 by @birabittoh</a>)</li>
-        </ul>
+        <Card forceColor={true}>
+            <ul>
+                <li>
+                    It's now possible to choose a custom file extension in the
+                    "Media encoding" section
+                </li>
+                <li>
+                    Fixed a bug due to which images/videos that should have been
+                    displayed in the screensaver weren't saved
+                </li>
+                <li>
+                    Fixed the wrong address of the website icon in the
+                    manifest.json file (see <a
+                        href="https://github.com/dinoosauro/ffmpeg-web/pull/13"
+                        target="_blank">#13 by @birabittoh</a
+                    >)
+                </li>
+            </ul>
         </Card>
-    </Card><br>
+    </Card><br />
     <Card type={1} forceColor={true}>
         <h3 style="text-align: center;">Version 3.1.0</h3>
         <Card forceColor={true}>
