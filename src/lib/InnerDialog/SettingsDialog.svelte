@@ -21,7 +21,7 @@
     import { createEventDispatcher } from "svelte";
     import { slide } from "svelte/transition";
     import OptionsPicker from "../OptionsPicker.svelte";
-    import { getLang } from "../../ts/LanguageAdapt";
+    import { getLang, languageCredits } from "../../ts/LanguageAdapt";
     import { GetImage, RerenderImageMap } from "../../ts/ImageHandler";
     import AdaptiveAsset from "../UIElements/AdaptiveAsset.svelte";
     import Themes from "../../ts/Customization/Themes";
@@ -101,11 +101,13 @@
      * The author of the displayed license
      */
     let showLicenseId = "2024 Dinoosauro";
+    let currentLanguage = localStorage.getItem("ffmpegWeb-SelectedLanguage") ?? navigator.language?.substring(0, 2) ?? "en"
     function saveLanguageChange(e: Event) {
         localStorage.setItem(
             "ffmpegWeb-SelectedLanguage",
             (e.target as HTMLInputElement).value,
         );
+        currentLanguage = (e.target as HTMLInputElement).value;
     }
 </script>
 
@@ -474,12 +476,13 @@
     </p>
     <select
         on:change={saveLanguageChange}
-        value={localStorage.getItem("ffmpegWeb-SelectedLanguage") ??
-            navigator.language?.substring(0, 2)}
+        value={currentLanguage}
     >
         <option value="en">English (EN)</option>
         <option value="it">Italiano (IT)</option>
-    </select>
+        <option value="zh">中文 (ZH)</option>
+    </select><br><br>
+    <p>This language translation was made made by <a target="_blank" href={languageCredits.get(currentLanguage)?.githubLink ?? languageCredits.get("en").githubLink}>{languageCredits.get(currentLanguage)?.username ?? languageCredits.get("en").username}</a></p>
 </Card><br />
 <Card type={1} forceColor={true}>
     <div class="flex hcenter" style="gap: 8px">
