@@ -2,6 +2,19 @@ interface TranslationRequirements {
     it: string
     zh: string // 添加简体中文支持
 }
+
+interface Credits {
+    username: string,
+    githubLink: string
+}
+
+
+export let languageCredits = new Map<string, Credits>([
+    ["it", {username: "dinoosauro", githubLink: "https://github.com/dinoosauro"}],
+    ["en", {username: "dinoosauro", githubLink: "https://github.com/dinoosauro"}],
+    ["zh", {username: "God-2077", githubLink: "https://github.com/God-2077"}],
+])
+
 let translations = new Map<string, TranslationRequirements>([
     ["The background color", { it: "Il colore dello sfondo", zh: "背景颜色" }],
     ["A background image", { it: "Una immagine come sfondo", zh: "背景图片" }],

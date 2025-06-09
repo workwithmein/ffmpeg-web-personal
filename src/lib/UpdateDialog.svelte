@@ -11,6 +11,18 @@
         <AdaptiveAsset asset="icon" width={128}></AdaptiveAsset>
     </div>
     <Card type={1} forceColor={true}>
+        <h3 style="text-align: center;">Version 3.1.5</h3>
+        <Card forceColor={true}>
+            <ul>
+                <li>Added Simplified Chinese support.
+                    <ul>
+                        <li>Thanks to <a href="https://github.com/God-2077" target="_blank">God-2077</a> for the translation!</li>
+                    </ul>
+                </li>
+            </ul>
+        </Card>
+    </Card><br>
+    <Card type={1} forceColor={true}>
         <h3 style="text-align: center;">Version 3.1.4</h3>
         <Card forceColor={true}>
             <ul>
