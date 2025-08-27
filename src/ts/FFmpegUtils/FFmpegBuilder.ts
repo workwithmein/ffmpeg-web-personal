@@ -186,7 +186,7 @@ export default class FfmpegHandler {
         if (!this.flags.addedFromInput && this.#conversion.forceCopyMetadata) { // Copy the metadata from the first file to the last one
             try {
                 const currentFailed = get(conversionFailedDate);
-                await this.ffmpeg.exec([`-i`, `__FfmpegWebExclusive__${suggestedFileRead}__${operationUuid}.${outputFileExtension}`, `-i`, FFmpegFileNameHandler(this.#files[0]), "-map", "0", "-map_metadata", "1", "-c", "copy", `__FfmpegWebExclusive__3__${operationUuid}.${outputFileExtension}`]);
+                await this.ffmpeg.exec([`-i`, `__FfmpegWebExclusive__${suggestedFileRead}__${operationUuid}.${outputFileExtension}`, `-i`, FFmpegFileNameHandler(this.#files[0]), "-map", "0", "-map_metadata", "1", "-map_metadata", "1:s:0", "-c", "copy", `__FfmpegWebExclusive__3__${operationUuid}.${outputFileExtension}`]);
                 if (currentFailed !== get(conversionFailedDate)) throw new Error();
                 suggestedFileRead = "3";
             } catch (ex) {
